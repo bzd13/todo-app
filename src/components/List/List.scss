@@ -1,6 +1,12 @@
 .list {
   margin-bottom: 30px;
 
+  &__add-button {
+    path {
+      stroke: #868686;
+    }
+  }
+
   li {
     display: flex;
     align-items: center;
@@ -21,6 +27,12 @@
       img {
         opacity: 0.6;
       }
+    }
+
+    &.cancel {
+      float: right;
+      width: 10px;
+      height: 10px;
     }
 
     .badge {
@@ -55,10 +67,3 @@
     }
   }
 }
-
-
-
-
-
-
-
