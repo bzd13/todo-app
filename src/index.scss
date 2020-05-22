@@ -29,3 +29,33 @@
 
   }
 }
+
+.button {
+  background: #4DD599;
+  border-radius: 6px;
+  color: #FFFFFF;
+  border: 0;
+  padding: 10px 20px;
+  cursor: pointer;
+
+  &:hover {
+    background: darken(#4DD599, 6%);
+  }
+
+  &:active {
+    background: darken(#4DD599, 10%);
+  }
+}
+
+.field {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #EFEFEF;
+  box-sizing: border-box;
+  border-radius: 4px;
+  padding: 8px 12px;
+
+  &:focus {
+    border-color: #dbdbdb;
+  }
+}

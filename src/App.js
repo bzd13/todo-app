@@ -1,72 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import List from "./components/List/index"
 import listSvg from './assets/img/list.svg';
+import AddList from './components/AddList';
+
+import DB from './assets/db.json'
 
 function App() {
+  const [lists, setLists] = useState(
+    DB.lists.map(item => {
+      item.color = DB.colors.filter(color => color.id === item.colorId)[0].name;
+      return item;
+    })
+  );
+
+  const onAddList = (obj) => {
+    const newList = [...lists, obj]
+    console.log(newList);
+    return setLists(newList);
+  }
+
   return <div className="todo">
     <div className="todo__sidebar">
-      <List items={[
-        {
-          icon: (<img src={listSvg} alt="List icon" />),
-          name: "Все задачи",
-          active: true
-        }
-      ]} />
-      <List items={[
-        {
-          color: "blue",
-          name: "Покупки",
-        },
-        {
-          color: "pink",
-          name: "Фронтенд"
-        },
-        {
-          color: "lightGreen",
-          name: "Фильмы и сериалы"
-        },
-        {
-          color: "grey",
-          name: "Фронтенд"
-        },
-        {
-          color: "black",
-          name: "Фронтенд"
-        },
-      ]}
+      <List
+        items={[
+          {
+            icon: (<img src={listSvg} alt="List icon" />),
+            name: "Все задачи",
+            active: true
+          }
+        ]} />
+      <List items={lists}
       isRemovable={true}
       />
-      <List items={[
-        {
-          icon: (
-          <svg 
-          width="12" 
-          height="12" 
-          viewBox="0 0 16 16" 
-          fill="none" 
-          xmlns="http://www.w3.org/2000/svg"
-          className="list__add-button"
-          >
-          <path 
-          d="M8 1V15" 
-          stroke="black" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          />
-          <path 
-          d="M1 8H15" 
-          stroke="black" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round"
-          />
-          </svg>),
-          name: "Добавить список",
-        }
-      ]}
-      isRemovable={true}
-      />
+      <AddList onAdd={onAddList} colors={DB.colors} listLastId={lists[lists.length - 1].id}/>
     </div>
     <div className="todo__tasks"></div>  
   </div>
@@ -74,3 +40,5 @@ function App() {
 }
 
 export default App;
+
+      // в AddList - listLastId={lists[lists.length - 1].id}

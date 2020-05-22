@@ -1,9 +1,13 @@
 .list {
+  $self: &;
+
   margin-bottom: 30px;
 
   &__add-button {
-    path {
-      stroke: #868686;
+    opacity: 0.4;    
+
+    &:hover {
+      opacity: 1;
     }
   }
 
@@ -11,13 +15,43 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: 10px 12px;
+    padding: 10px 7px;
     margin: 5px;
+    white-space: nowrap;
+    text-overflow: hidden;
+
+    &:hover #{$self}__remove-icon {
+      opacity: 0.2;
+    }
+
+    #{$self}__remove-icon {
+      opacity: 0;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
+    span {
+      flex: 1;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+    }
 
     &.active {
       background: #FFFFFF;
       box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
       border-radius: 4px;
+    }
+
+    .badge {
+      position: relative;
+      left: 3px;
+      border: 1px solid;
+      border-color: #7d7d7d;
     }
 
     i {
@@ -26,43 +60,6 @@
 
       img {
         opacity: 0.6;
-      }
-    }
-
-    &.cancel {
-      float: right;
-      width: 10px;
-      height: 10px;
-    }
-
-    .badge {
-      width: 10px;
-      height: 10px;
-      border-radius: 30px;
-      border: 1px solid;
-      border-color: #7d7d7d;
-      
-      position: relative;
-      left: 3px;
-
-      &--blue {
-        background-color: #64C4ED;
-      }
-
-      &--pink {
-        background-color: #FFBBCC;
-      }
-
-      &--lightGreen {
-        background-color: #B6E6BD;
-      }
-
-      &--grey {
-        background-color: #C9D1D3;
-      }
-
-      &--black {
-        background-color: black;
       }
     }
   }
