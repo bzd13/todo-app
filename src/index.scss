@@ -19,14 +19,21 @@
   border-radius: 10px;
   border: 1px solid #f1f1f1;
   font-size: 14px;
+  display: flex;
+  flex-direction: row;
 
   &__sidebar {
     background-color: #f4f6f8;
     width: 200px;
-    height: calc(100% - 120px);
+    height: auto;
+    // height: calc(100% - 120px);
     border-right: 1px solid #f1f1f1;
     padding: 60px 10px;
+  }
 
+  &__tasks {
+    flex: 1;
+    padding: 60px;
   }
 }
 
@@ -37,6 +44,7 @@
   border: 0;
   padding: 10px 20px;
   cursor: pointer;
+  font-style: 14px;
 
   &:hover {
     background: darken(#4DD599, 6%);
@@ -44,6 +52,24 @@
 
   &:active {
     background: darken(#4DD599, 10%);
+  }
+
+  &:disabled {
+    background: #d8d8d8;
+    cursor: not-allowed; 
+  }
+
+  &--grey {
+    background: #e4e4e4;
+    color: #444444;
+
+    &:hover {
+      background: darken(#e4e4e4, 4%);
+    }
+  
+    &:active {
+      background: darken(#e4e4e4, 8%);
+    }
   }
 }
 
@@ -54,6 +80,7 @@
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 12px;
+  font-style: 14px;
 
   &:focus {
     border-color: #dbdbdb;
