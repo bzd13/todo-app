@@ -6,7 +6,7 @@ import editSvg from "../../assets/img/edit.svg";
 import './Tasks.scss'
 import AddTaskForm from './AddTaskForm';
 
-const Tasks = ({ list, onAddTask, onEditTitle }) => {
+const Tasks = ({ list, onAddTask, onEditTitle, withoutEmpty}) => {
 
   const editTitle = () => {
     const newTitle = window.prompt('Введите название', list.name);
@@ -24,13 +24,13 @@ const Tasks = ({ list, onAddTask, onEditTitle }) => {
 
   return (
     <div className="tasks">
-      <h2 className="tasks__title">
+      <h2 style={{ color: list.color.hex }} className="tasks__title"> 
         {list.name}
         <img onClick={editTitle} src={editSvg} alt="Edit icon" />
       </h2>
 
       <div className="tasks__items">
-        {!list.tasks.length && <h2>Задачи отсутствуют</h2>}
+        {!withoutEmpty && !list.tasks.length && <h2>Задачи отсутствуют</h2>}
         {list.tasks.map(task => (
           <div key={task.id} className="tasks__items-row">
             <div className="checkbox">
@@ -52,3 +52,4 @@ const Tasks = ({ list, onAddTask, onEditTitle }) => {
 
 export default Tasks;
 
+/* <h2 className={classNames("tasks__title", {[`tasks__title--${colors[list.colorId].name}`]: colors})}>  */
