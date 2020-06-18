@@ -12,8 +12,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 750px;
-  height: 530px;
+  width: calc(100vw - 60px);
+  height: calc(100vh - 100px);
   transform: translate(-50%, -50%);
   box-shadow: 1px 2px 11px #eaeaea;
   border-radius: 10px;

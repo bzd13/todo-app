@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import listSvg from './assets/img/list.svg';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Route, useHistory } from 'react-router-dom';
-
-import { List, AddList, Tasks } from './components';
-
-// import DB from './assets/db.json';
+import listSvg from './assets/img/list.svg';
+import { AddList, List, Tasks } from './components';
 
 function App() {
   const [lists, setLists] = useState(null);
   const [colors, setColors] = useState(null);
   const [activeItem, setActiveItem] = useState(null);
   let history = useHistory();
-
-  // const [lists, setLists] = useState(
-  //   DB.lists.map(item => {
-  //     item.color = DB.colors.filter(color => color.id === item.colorId)[0].name;
-  //     return item;
-  //   })
-  // );
 
   useEffect(() => {
     axios.get('http://localhost:3001/lists?_expand=color&_embed=tasks').then(({ data }) => {
@@ -27,6 +17,9 @@ function App() {
     axios.get('http://localhost:3001/colors').then(({ data }) => {
       setColors(data);
     });
+    // axios.get('http://localhost:3001/lists/').then(({ data }) => {
+    //   setActiveItem(data);
+    // });
   }, []);
 
   const onAddList = (obj) => {
@@ -36,14 +29,88 @@ function App() {
 
   const onAddTask = (listId, taskObj) => {
     console.log(listId, taskObj);
-    const newList = lists.map(item => {
+    const newList = lists.map((item, i) => {
       if (item.id === listId) {
         item.tasks = [...item.tasks, taskObj];
       }
       return item;
     });
-    return setLists(newList);
+    setLists(newList);
   };
+
+  const onEditTask = (listId, taskObj) => {
+    const newTaskText = window.prompt('Текст задачи', taskObj.text)
+    
+    if (!newTaskText) {
+      return alert('Введите текст задачи!');
+    } 
+
+    const newList = lists.map(list => {
+      if (list.id === listId) {
+        list.tasks = list.tasks.filter(task => {
+          if (task.id === taskObj.id) {
+            task.text = newTaskText;
+          }
+          return task;
+        });
+      }
+      return list;
+    });
+    setLists(newList);
+    axios.patch('http://localhost:3001/tasks/' + taskObj.id, { text: newTaskText }).catch(e => {
+      console.log(e);
+      alert('Не удалось изменить текст задачи');
+    });
+    // вероятно, axios.delete работает асинхронно, возможно нужно принудительно сначала отправлять запрос, а потом устанавливать setList
+  }
+
+  const onRemoveTask = (listId, taskId) => {
+    if (window.confirm('Вы действительно хотите удалить задачу?')) {
+      const newList = lists.map(item => {
+        if (item.id === listId) {
+          item.tasks = item.tasks.filter(task => task.id !== taskId);
+        }
+        return item;
+      });
+      setLists(newList);
+      axios.delete('http://localhost:3001/tasks/' + taskId).catch(e => {
+        console.log(e);
+        alert('Не удалось удалить задачу');
+      });
+      // вероятно, axios.delete работает асинхронно, возможно нужно принудительно сначала отправлять запрос, а потом устанавливать setList
+    }
+  };
+
+  const onCompleteTask = (listId, taskId, completed) => {
+    const newList = lists.map(list => {
+      if (list.id === listId) {
+        list.tasks.map(task => {
+          if (task.id === taskId) {
+            task.completed = completed;
+          };
+          return task;
+        });
+      };
+      return list;
+    });
+    // const newList = lists.map(list => {
+    //   if (list.id === listId) {
+    //     list.tasks = list.tasks.filter(task => {
+    //       if (task.id === taskId) {
+    //         task.completed = completed;
+    //       }
+    //       return task;
+    //     });
+    //   }
+    //   return list;
+    // });
+    // другой способ
+    setLists(newList);
+    axios.patch('http://localhost:3001/tasks/' + taskId, { completed: completed }).catch(e => {
+      console.log(e);
+      alert('Не удалось обновить задачу');
+    });
+  }
 
   const onEditListTitle = (id, title) => {
     const newList = lists.map(item => {
@@ -55,13 +122,13 @@ function App() {
     return setLists(newList);
   };
 
-  // useEffect(() => {
-  //   const listId = history.location.pathname.split('lists/')[1];
-  //   if (lists) {
-  //     const list = lists.find(list => list.id === Number(listId));
-  //     setActiveItem(list);
-  //   }
-  // }, [lists, history.location.pathname]);
+  useEffect(() => {
+    const listId = history.location.pathname.split('lists/')[1];
+    if (lists) {
+      const list = lists.find(list => list.id === Number(listId));
+      setActiveItem(list);
+    }
+  }, [lists, history.location.pathname]);
 
   return (
     <div className="todo">
@@ -69,6 +136,7 @@ function App() {
         <List
           onClickItem={list => {
             history.push(`/`);
+            setActiveItem(list);
           }}
           items={[
             {
@@ -76,43 +144,52 @@ function App() {
               icon: (<img src={listSvg} alt="List icon" />),
               name: "Все задачи"
             }
-          ]} />
-          {lists ? (
-            <List 
-              items={lists}
-              isRemovable={true}
-              onRemove={id => {
-                const newLists = lists.filter(item => item.id !== id);
-                setLists(newLists);
-              }}
-              onClickItem={list => {
-                history.push(`/lists/${list.id}`);
-              }}
-              activeItem={activeItem}
-            />
-          ) : (
-            'Загрузка...'
-          )}
+          ]} 
+        />
+        {lists ? (
+          <List 
+            items={lists}
+            onRemove={id => {
+              const newLists = lists.filter(item => item.id !== id);
+              setLists(newLists);
+            }}
+            onClickItem={list => {
+              history.push(`/lists/${list.id}`);
+              setActiveItem(list);
+            }}
+            activeItem={activeItem}
+            isRemovable={true}
+          />
+        ) : (
+          'Загрузка...'
+        )}
         <AddList onAdd={onAddList} colors={colors} />
       </div>
       <div className="todo__tasks">
         <Route exact path="/">
           {lists && lists.map(list => (
-              <Tasks 
-                key={list.id}
-                list={list} 
-                onAddTask={onAddTask} 
-                onEditTitle={onEditListTitle}
-                withoutEmpty
-              />
+            <Tasks 
+              key={list.id}
+              list={list} 
+              onAddTask={onAddTask} 
+              onEditTitle={onEditListTitle}
+              onRemoveTask={onRemoveTask}
+              onEditTask={onEditTask}
+              onCompleteTask={onCompleteTask}
+              withoutEmpty
+            />
           ))}
         </Route>
         <Route path="/lists/:id">
           {lists && activeItem && (
-            <Tasks 
+            <Tasks
+              // list={lists[1]} - работает, то есть в activeItem ничего не передается
               list={activeItem} 
               onAddTask={onAddTask} 
-              onEditTitle={onEditListTitle} 
+              onEditTitle={onEditListTitle}
+              onRemoveTask={onRemoveTask}
+              onEditTask={onEditTask}
+              onCompleteTask={onCompleteTask}
             />
           )}
         </Route>
@@ -122,7 +199,3 @@ function App() {
 }
 
 export default App;
-
-      // listLastId={Array.isArray(lists) && lists[lists.length - 1].id
-      // в AddList - listLastId={lists[lists.length - 1].id}
-      // <AddList onAdd={onAddList} colors={DB.colors} listLastId={lists[lists.length - 1].id}/>

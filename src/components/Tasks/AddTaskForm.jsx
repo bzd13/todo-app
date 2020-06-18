@@ -17,6 +17,14 @@ const AddTaskForm = ({ list, onAddTask }) => {
   };
 
   const addTask = () => {
+    // axios.get('http://localhost:3001/lists/').then(({ data }) => {
+    //   console.log(data);
+    //   if (data.length >= 10) {
+    //     return alert('Нельзя создавать больше 10 списков :(')
+    //   }
+    // });
+
+    // Пробую создать проверку на невозможность создания больше 10 списков
     const obj = {
       listId: list.id,
       text: inputValue,
@@ -24,9 +32,9 @@ const AddTaskForm = ({ list, onAddTask }) => {
     };
     setIsLoading(true);
     axios
-      .post('http://localhost:3001/tasks', obj)
+      .post(`http://localhost:3001/tasks`, obj)
       .then(({ data }) => {
-        console.log(data);
+        console.log(`Добавлен объект задачи: `, data);
         onAddTask(list.id, obj);
         toogleFormVisible();
         setInputValue('');

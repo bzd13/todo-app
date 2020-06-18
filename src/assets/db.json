@@ -29,6 +29,16 @@
       "name": "тест",
       "colorId": 5,
       "id": 6
+    },
+    {
+      "name": "44",
+      "colorId": 4,
+      "id": 7
+    },
+    {
+      "name": "asd",
+      "colorId": 5,
+      "id": 8
     }
   ],
   "tasks": [
@@ -36,7 +46,7 @@
       "id": 1,
       "listId": 2,
       "text": "Изучить JavaScript",
-      "completed": false
+      "completed": true
     },
     {
       "id": 2,
@@ -59,7 +69,7 @@
     {
       "listId": 3,
       "text": "asd",
-      "completed": false,
+      "completed": true,
       "id": 5
     },
     {
@@ -69,46 +79,46 @@
       "id": 6
     },
     {
-      "listId": 6,
-      "text": "",
-      "completed": false,
-      "id": 7
-    },
-    {
-      "listId": 6,
-      "text": "123",
-      "completed": false,
-      "id": 8
-    },
-    {
-      "listId": 6,
-      "text": "",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "listId": 6,
-      "text": "223332",
-      "completed": false,
-      "id": 10
-    },
-    {
-      "listId": 6,
-      "text": "123",
-      "completed": false,
-      "id": 11
-    },
-    {
-      "listId": 6,
-      "text": "12323132222",
-      "completed": false,
-      "id": 12
-    },
-    {
       "listId": 4,
       "text": "Купить \"Гарри Поттер\"",
       "completed": false,
       "id": 13
+    },
+    {
+      "listId": 1,
+      "text": "Купить помидоры",
+      "completed": true,
+      "id": 16
+    },
+    {
+      "listId": 1,
+      "text": "qwe",
+      "completed": true,
+      "id": 17
+    },
+    {
+      "listId": 1,
+      "text": "qweкer",
+      "completed": false,
+      "id": 18
+    },
+    {
+      "listId": 7,
+      "text": "123",
+      "completed": false,
+      "id": 22
+    },
+    {
+      "listId": 7,
+      "text": "qwe",
+      "completed": false,
+      "id": 23
+    },
+    {
+      "listId": 8,
+      "text": "sw",
+      "completed": false,
+      "id": 24
     }
   ],
   "colors": [
