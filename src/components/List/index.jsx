@@ -8,33 +8,16 @@ import Badge from '../Badge';
 
 import './List.scss';
 
-const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activeItem }) => {
+const List = ({ items, isRemovable, onClick, onRemove, onClickItem, activeItem, setNewActiveItem }) => {
   
   const removeList = (item) => {
     if (window.confirm('Вы действительно хотите удалить список?')) {
       axios.delete('http://localhost:3001/lists/' + item.id).then(() => {
+        setNewActiveItem(item.id - 1);
         onRemove(item.id);
       });
     }
   }
-
-  // {
-  
-  //   const removeList = (item) => {
-  //     if (window.confirm('Вы действительно хотите удалить список?')) {
-  //       axios.delete('http://localhost:3001/lists/' + item.id).then(() => {
-  //         onRemove(item.id);
-  //       });
-  //     }
-  //   }
-
-  // const removeList = (item) => {
-  //   if (window.confirm('Вы действительно хотите удалить список?')) {
-  //     axios.delete('http://localhost:3001/lists/' + item.id).then(() => {
-  //       onRemove(item);
-  //     });
-  //   }
-  // };
   
   return (
     <ul onClick={onClick} className="list">

@@ -28,8 +28,9 @@ function App() {
   };
 
   const onAddTask = (listId, taskObj) => {
-    console.log(listId, taskObj);
-    const newList = lists.map((item, i) => {
+    // console.log(listId, taskObj);
+    // console.log(taskObj.id);
+    const newList = lists.map(item => {
       if (item.id === listId) {
         item.tasks = [...item.tasks, taskObj];
       }
@@ -61,7 +62,6 @@ function App() {
       console.log(e);
       alert('Не удалось изменить текст задачи');
     });
-    // вероятно, axios.delete работает асинхронно, возможно нужно принудительно сначала отправлять запрос, а потом устанавливать setList
   }
 
   const onRemoveTask = (listId, taskId) => {
@@ -72,12 +72,13 @@ function App() {
         }
         return item;
       });
-      setLists(newList);
-      axios.delete('http://localhost:3001/tasks/' + taskId).catch(e => {
+      setLists(newList)
+      axios
+        .delete('http://localhost:3001/tasks/' + taskId)
+        .catch(e => {
         console.log(e);
         alert('Не удалось удалить задачу');
       });
-      // вероятно, axios.delete работает асинхронно, возможно нужно принудительно сначала отправлять запрос, а потом устанавливать setList
     }
   };
 
@@ -85,6 +86,7 @@ function App() {
     const newList = lists.map(list => {
       if (list.id === listId) {
         list.tasks.map(task => {
+          console.log(task.id, taskId);
           if (task.id === taskId) {
             task.completed = completed;
           };
@@ -120,6 +122,14 @@ function App() {
       return item;
     });
     return setLists(newList);
+  };
+
+  const setNewActiveItem = (id) => {
+    axios.get('http://localhost:3001/lists?_expand=color&_embed=tasks').then(({ data }) => {
+      const list = data.find(list => list.id === Number(id));
+      history.push(`/lists/${list.id}`);
+      setActiveItem(list);
+    });
   };
 
   useEffect(() => {
@@ -159,6 +169,7 @@ function App() {
             }}
             activeItem={activeItem}
             isRemovable={true}
+            setNewActiveItem={setNewActiveItem}
           />
         ) : (
           'Загрузка...'
@@ -183,7 +194,6 @@ function App() {
         <Route path="/lists/:id">
           {lists && activeItem && (
             <Tasks
-              // list={lists[1]} - работает, то есть в activeItem ничего не передается
               list={activeItem} 
               onAddTask={onAddTask} 
               onEditTitle={onEditListTitle}

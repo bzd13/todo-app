@@ -35,7 +35,7 @@ const AddTaskForm = ({ list, onAddTask }) => {
       .post(`http://localhost:3001/tasks`, obj)
       .then(({ data }) => {
         console.log(`Добавлен объект задачи: `, data);
-        onAddTask(list.id, obj);
+        onAddTask(list.id, data);
         toogleFormVisible();
         setInputValue('');
       })
